@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --gold: #ffd700;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+    overflow: hidden;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: white;
+}
+
+/* Fireworks canvas */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Main card */
+.card {
+    position: relative;
+    z-index: 2;
+    max-width: 420px;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 35px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    text-align: center;
+}
+
+/* Text */
+h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    color: var(--gold);
+    animation: glow 2s infinite alternate;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+#year {
+    font-size: 64px;
+    font-weight: bold;
+    color: var(--gold);
+    margin: 15px 0;
+}
+
+#countdown {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Button */
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: var(--gold);
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ffea70;
+}
+
+/* Animations */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px gold;
+    }
+    to {
+        text-shadow: 0 0 25px gold;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 34px;
+    }
+    #year {
+        font-size: 50px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="card">
+    <h1>🎉 Happy New Year 🎉</h1>
+    <h2>May your dreams turn into reality</h2>
+
+    <div id="year"></div>
+
+    <div id="countdown">Loading...</div>
+
+    <p>With best wishes,<br><strong>Anurag Aanand</strong>❤️</p>
+
+    <button onclick="toggleMusic()">Play / Pause Music</button>
+</div>
+
+<audio id="music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* YEAR */
+const currentYear = new Date().getFullYear();
+document.getElementById("year").innerText = currentYear + 1;
+
+/* COUNTDOWN */
+const newYearTime = new Date(`Jan 1, ${currentYear + 1} 00:00:00`).getTime();
+
+const timer = setInterval(() => {
+    const now = new Date().getTime();
+    const diff = newYearTime - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerText =
+            "🎆 Welcome to the New Year 🎆";
+        clearInterval(timer);
+        return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerText =
+        `${d}d ${h}h ${m}m ${s}s remaining`;
+}, 1000);
+
+/* MUSIC */
+const music = document.getElementById("music");
+function toggleMusic() {
+    music.paused ? music.play() : music.pause();
+}
+
+/* FIREWORKS */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function firework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.6;
+    const color = `hsl(${Math.random() * 360},100%,60%)`;
+
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            alpha: 1,
+            color
+        });
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, i) => {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.015;
+
+        if (p.alpha <= 0) particles.splice(i, 1);
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+}
+
+setInterval(firework, 900);
+animate();
+
+window.onresize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --gold: #ffd700;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+    overflow: hidden;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: white;
+}
+
+/* Fireworks canvas */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Main card */
+.card {
+    position: relative;
+    z-index: 2;
+    max-width: 420px;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 35px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    text-align: center;
+}
+
+/* Text */
+h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    color: var(--gold);
+    animation: glow 2s infinite alternate;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+#year {
+    font-size: 64px;
+    font-weight: bold;
+    color: var(--gold);
+    margin: 15px 0;
+}
+
+#countdown {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Button */
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    background: var(--gold);
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ffea70;
+}
+
+/* Animations */
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px gold;
+    }
+    to {
+        text-shadow: 0 0 25px gold;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 34px;
+    }
+    #year {
+        font-size: 50px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="card">
+    <h1>🎉 Happy New Year 🎉</h1>
+    <h2>May your dreams turn into reality</h2>
+
+    <div id="year"></div>
+
+    <div id="countdown">Loading...</div>
+
+    <p>With best wishes,<br><strong>Anurag Aanand</strong>❤️</p>
+
+    <button onclick="toggleMusic()">Play / Pause Music</button>
+</div>
+
+<audio id="music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* YEAR */
+const currentYear = new Date().getFullYear();
+document.getElementById("year").innerText = currentYear + 1;
+
+/* COUNTDOWN */
+const newYearTime = new Date(`Jan 1, ${currentYear + 1} 00:00:00`).getTime();
+
+const timer = setInterval(() => {
+    const now = new Date().getTime();
+    const diff = newYearTime - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerText =
+            "🎆 Welcome to the New Year 🎆";
+        clearInterval(timer);
+        return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerText =
+        `${d}d ${h}h ${m}m ${s}s remaining`;
+}, 1000);
+
+/* MUSIC */
+const music = document.getElementById("music");
+function toggleMusic() {
+    music.paused ? music.play() : music.pause();
+}
+
+/* FIREWORKS */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function firework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.6;
+    const color = `hsl(${Math.random() * 360},100%,60%)`;
+
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            alpha: 1,
+            color
+        });
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, i) => {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.015;
+
+        if (p.alpha <= 0) particles.splice(i, 1);
+    });
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+}
+
+setInterval(firework, 900);
+animate();
+
+window.onresize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
+</script>
+
+</body>
+</html>
